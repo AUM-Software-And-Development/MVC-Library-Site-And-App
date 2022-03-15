@@ -37,7 +37,7 @@ namespace LibraryServices
         public LibraryBranch GetCurrentLocation(int id)
         {
             return GetById(id).Location;
-                // this._context.LibraryAssets.FirstOrDefault(asset => asset.Id == id).Location;
+            // this._context.LibraryAssets.FirstOrDefault(asset => asset.Id == id).Location;
         }
 
         public string GetDeweyIndex(int id)
@@ -77,7 +77,7 @@ namespace LibraryServices
             var isVideo = this._context.LibraryAssets.OfType<Video>()
                 .Where(asset => asset.Id == id).Any();
 
-            return isBook ? 
+            return isBook ?
                 this._context.Books.FirstOrDefault(book => book.Id == id).Author :
                 this._context.Videos.FirstOrDefault(video => video.Id == id).Director
                 ?? "Unknown";
