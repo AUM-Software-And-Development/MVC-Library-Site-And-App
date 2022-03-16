@@ -15,7 +15,6 @@ namespace LibraryData
         IEnumerable<CheckoutHistory> GetCheckoutHistory(int id);
         Checkout GetLatestCheckout(int assetId);
 
-
         void PlaceHold(int assetId, int libraryCardId);
         string GetCurrentHoldPatronName(int id);
         DateTime GetCurrentHoldPlaced(int id);

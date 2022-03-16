@@ -59,18 +59,18 @@ namespace LibraryServices
 
         public void MarkFound(int assetId)
         {
-            UpdateAssetStatus(assetId, "Available");
+            this.UpdateAssetStatus(assetId, "Available");
 
-            RemoveExistingCheckouts(assetId);
+            this.RemoveExistingCheckouts(assetId);
 
-            CloseExistingCheckoutHistory(assetId);
+            this.CloseExistingCheckoutHistory(assetId);
 
             _context.SaveChanges();
         }
 
         public void MarkLost(int assetId)
         {
-            UpdateAssetStatus(assetId, "Lost");
+            this.UpdateAssetStatus(assetId, "Lost");
         }
 
         public void CheckInItem(int assetId, int libraryCardId)
@@ -83,18 +83,72 @@ namespace LibraryServices
             _context.Update(item);
 
             // Remove any existing checkouts on the item
-            // Close any existing checkout history
-            // Look for existing holds on the item
-            // If there are holds, checkout the item to the library card with the earliest hold
-            // else update the item status to available
-        }
+            this.RemoveExistingCheckouts(assetId);
 
-        public void PlaceHold(int assetId, int libraryCardId)
-        {
-            throw new NotImplementedException();
+            // Close any existing checkout history
+            this.CloseExistingCheckoutHistory(assetId);
+
+            // Look for existing holds on the item
+            var currentHolds = _context.Holds
+                .Include(h => h.LibraryAsset)
+                .Include(h => h.LibraryCard)
+                .Where(h => h.LibraryAsset.Id == assetId);
+
+            switch (currentHolds.Any())
+            {
+                case true:
+                    // If there are holds, checkout the item to the library card with the earliest hold
+                    this.CheckoutToEarliestHold(assetId, currentHolds);
+                    goto default;
+                default:
+                    // Always update the item status to available
+                    this.UpdateAssetStatus(assetId, "Available");
+                    break;
+            }
+
+            _context.SaveChanges();
         }
 
         public void CheckOutItem(int assetId, int libraryCardId)
+        {
+            if (this.IsCheckedOut(assetId))
+            {
+                return;
+            }
+            else
+            {
+                var item = _context.LibraryAssets.FirstOrDefault(a => a.Id == assetId);
+
+                this.UpdateAssetStatus(assetId, "Checked Out");
+
+                var libraryCard = _context.LibraryCards
+                    .Include(card => card.Checkouts)
+                    .FirstOrDefault(card => card.Id == libraryCardId);
+
+                var now = DateTime.Now;
+                var checkout = new Checkout()
+                {
+                    LibraryAsset = item,
+                    LibraryCard = libraryCard,
+                    Since = now,
+                    Until = this.GetDefaultCheckoutTime(now)
+                };
+
+                _context.Add(checkout);
+
+                var checkoutHistory = new CheckoutHistory
+                {
+                    CheckedOut = now,
+                    LibraryAsset = item,
+                    LibraryCard = libraryCard
+                };
+
+                _context.Add(checkoutHistory);
+                _context.SaveChanges();
+            }
+        }
+
+        public void PlaceHold(int assetId, int libraryCardId)
         {
             throw new NotImplementedException();
         }
@@ -114,6 +168,7 @@ namespace LibraryServices
         /// <summary>
         /// Check in an item entry by assigning a date to its checked in status.
         /// </summary>
+        /// <param name="assetId">Id to search for.</param>
         private void CloseExistingCheckoutHistory(int assetId)
         {
             var history = _context.CheckoutHistories
@@ -130,6 +185,7 @@ namespace LibraryServices
         /// <summary>
         /// Remove any existing checkouts for the item.
         /// </summary>
+        /// <param name="assetId">Id to search for.</param>
         private void RemoveExistingCheckouts(int assetId)
         {
             var checkout = _context.Checkouts
@@ -144,6 +200,8 @@ namespace LibraryServices
         /// <summary>
         /// Change an item's status.
         /// </summary>
+        /// <param name="assetId">Id to search for.</param>
+        /// <param name="newAssetStatus">Status to give it.</param>
         private void UpdateAssetStatus(int assetId, string newAssetStatus)
         {
             var item = _context.LibraryAssets
@@ -153,6 +211,45 @@ namespace LibraryServices
 
             item.Status = _context.Statuses
                 .FirstOrDefault(status => status.Name == newAssetStatus);
+        }
+
+        /// <summary>
+        /// Checks an item out.
+        /// </summary>
+        /// <param name="assetId">Id to search for.</param>
+        /// <param name="currentHolds">Hold list</param>
+        private void CheckoutToEarliestHold(int assetId, IQueryable<Hold> currentHolds)
+        {
+            var earliestHold = currentHolds
+                .OrderBy(holds => holds.HoldPlaced)
+                .FirstOrDefault();
+
+            var card = earliestHold.LibraryCard;
+
+            _context.Remove(earliestHold);
+            _context.SaveChanges();
+            this.CheckOutItem(assetId, card.Id);
+        }
+
+        /// <summary>
+        /// Checks if an asset is within the checkouts list.
+        /// </summary>
+        /// <param name="assetId">Asset to search for.</param>
+        /// <returns>True or false indicating if the item has been checked out.</returns>
+        private bool IsCheckedOut(int assetId)
+        {
+            var isCheckedOut = _context.Checkouts.Where(cO => cO.LibraryAsset.Id == assetId).Any();
+            return isCheckedOut;
+        }
+
+        /// <summary>
+        /// Generates a default checkout return due date.
+        /// </summary>
+        /// <param name="now">The time of the checkout.</param>
+        /// <returns>The return due date based on the checkout time.</returns>
+        private DateTime GetDefaultCheckoutTime(DateTime now)
+        {
+            return now.AddDays(30);
         }
     }
 }
