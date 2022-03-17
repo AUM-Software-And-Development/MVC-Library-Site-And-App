@@ -153,6 +153,7 @@ namespace LibraryServices
             var now = DateTime.Now;
 
             var asset = _context.LibraryAssets
+                .Include(a => a.Status)
                 .FirstOrDefault(a => a.Id == assetId);
 
             var card = _context.LibraryCards
@@ -222,9 +223,9 @@ namespace LibraryServices
 
                 var patron = _context.Patrons
                     .Include(p => p.LibraryCard)
-                    .Where(p => p.LibraryCard.Id == cardId) as Patron;
+                    .FirstOrDefault(p => p.LibraryCard.Id == cardId);
 
-                // If not first or default you have to cast
+                // If not first or default you have to cast and handle any null exceptions
 
                 return patron.FirstName + " " + patron.LastName;
             }
@@ -303,7 +304,7 @@ namespace LibraryServices
         /// </summary>
         /// <param name="assetId">Asset to search for.</param>
         /// <returns>True or false indicating if the item has been checked out.</returns>
-        private bool IsCheckedOut(int assetId)
+        public bool IsCheckedOut(int assetId)
         {
             var isCheckedOut = _context.Checkouts.Where(cO => cO.LibraryAsset.Id == assetId).Any();
             return isCheckedOut;
