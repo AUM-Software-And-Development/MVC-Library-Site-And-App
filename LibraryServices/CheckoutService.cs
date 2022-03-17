@@ -150,17 +150,84 @@ namespace LibraryServices
 
         public void PlaceHold(int assetId, int libraryCardId)
         {
-            throw new NotImplementedException();
+            var now = DateTime.Now;
+
+            var asset = _context.LibraryAssets
+                .FirstOrDefault(a => a.Id == assetId);
+
+            var card = _context.LibraryCards
+                .FirstOrDefault(c => c.Id == libraryCardId);
+
+            if (asset.Status.Name == "Available")
+            {
+                UpdateAssetStatus(assetId, "Hold");
+            }
+
+            var hold = new Hold
+            {
+                HoldPlaced = now,
+                LibraryAsset = asset,
+                LibraryCard = card
+            };
+
+            _context.Add(hold);
+            _context.SaveChanges();
         }
 
-        public string GetCurrentHoldPatronName(int id)
+        public string GetCurrentHoldPatronName(int holdId)
         {
-            throw new NotImplementedException();
+            var hold = _context.Holds
+                .Include(h => h.LibraryAsset)
+                .Include(h => h.LibraryCard)
+                .FirstOrDefault(h => h.Id == holdId);
+
+            var cardId = hold?.LibraryCard.Id;
+
+            var patron = _context.Patrons
+                .Include(p => p.LibraryCard)
+                .FirstOrDefault(p => p.LibraryCard.Id == cardId);
+
+            return patron?.FirstName + " " + patron.LastName;
         }
 
-        public DateTime GetCurrentHoldPlaced(int id)
+        public DateTime GetCurrentHoldPlaced(int holdId)
         {
-            throw new NotImplementedException();
+            return
+                _context.Holds
+                .Include(h => h.LibraryAsset)
+                .Include(h => h.LibraryCard)
+                .FirstOrDefault(h => h.Id == holdId)
+                .HoldPlaced;
+        }
+
+        public Checkout GetCheckoutByAssetId(int assetId)
+        {
+            return
+                _context.Checkouts
+                .Include(cO => cO.LibraryAsset)
+                .Include(cO => cO.LibraryCard)
+                .FirstOrDefault(cO => cO.LibraryAsset.Id == assetId);
+        }
+
+        public string GetCurrentCheckoutPatron(int assetId)
+        {
+            var checkout = this.GetCheckoutByAssetId(assetId);
+            if (checkout == null)
+            {
+                return "";
+            }
+            else
+            {
+                var cardId = checkout.LibraryCard.Id;
+
+                var patron = _context.Patrons
+                    .Include(p => p.LibraryCard)
+                    .Where(p => p.LibraryCard.Id == cardId) as Patron;
+
+                // If not first or default you have to cast
+
+                return patron.FirstName + " " + patron.LastName;
+            }
         }
 
         // Internal

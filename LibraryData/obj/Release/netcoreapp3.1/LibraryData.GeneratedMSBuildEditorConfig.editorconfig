@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = LibraryData
+build_property.ProjectDir = C:\development\vs2019\asp.net_core3_library_application\LibraryData\
