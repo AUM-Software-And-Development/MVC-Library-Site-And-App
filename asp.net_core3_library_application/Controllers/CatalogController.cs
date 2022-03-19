@@ -134,27 +134,27 @@ namespace asp.net_core3_library_application.Controllers
             return View(model);
     }
 
-        public IActionResult MarkLost(int assetId)
+        public IActionResult MarkLost(int id)
         {
-            _checkouts.MarkLost(assetId);
+            _checkouts.MarkLost(id);
 
-            return RedirectToAction("Detail", new { id = assetId });
+            return RedirectToAction("Detail", new { id = id });
         }
 
         [HttpPost] // Limit to post
-        public IActionResult PlaceCheckout(int assetId, int libraryCardId)
+        public IActionResult PlaceCheckout(int id, int libraryCardId)
         {
-            _checkouts.CheckOutItem(assetId, libraryCardId);
+            _checkouts.CheckOutItem(id, libraryCardId);
 
-            return RedirectToAction("Detail", new { id = assetId });
+            return RedirectToAction("Detail", new { id = id });
         }
 
         [HttpPost]
-        public IActionResult PlaceHold(int assetId, int libraryCardId)
+        public IActionResult PlaceHold(int id, int libraryCardId)
         {
-            _checkouts.PlaceHold(assetId, libraryCardId);
+            _checkouts.PlaceHold(id, libraryCardId);
 
-            return RedirectToAction("Detail", new { id = assetId });
+            return RedirectToAction("Detail", new { id = id });
         }
     }
 }

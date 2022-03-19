@@ -1,4 +1,31 @@
-﻿.imageCell {
+﻿* {
+    font-family: 'Times New Roman';
+}
+
+/* Layout Index */
+
+span.logo > a {
+    color: white;
+}
+
+div#catalog {
+    background: url('/images/catalog.jpg') bottom right 15% no-repeat #555;
+    color: white;
+}
+
+div#patrons {
+    background: url('/images/patrons.jpg') bottom right 15% no-repeat #555;
+    color: white;
+}
+
+div#branches {
+    background: url('/images/branches.jpg') bottom right 15% no-repeat #555;
+    color: white;
+}
+
+/* Other */
+
+.imageCell {
     min-width: 60% !important;
     max-width: 60% !important;
     min-height: 60% !important;
@@ -18,4 +45,9 @@
 
 tr.detailInfo > td {
     padding-bottom: 10px;
+}
+
+div.page-content {
+    width: 81%;
+    margin: 0 auto;
 }
