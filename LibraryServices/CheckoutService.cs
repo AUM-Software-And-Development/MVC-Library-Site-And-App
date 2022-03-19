@@ -73,7 +73,7 @@ namespace LibraryServices
             this.UpdateAssetStatus(assetId, "Lost");
         }
 
-        public void CheckInItem(int assetId, int libraryCardId)
+        public void CheckInItem(int assetId)
         {
             var now = DateTime.Now;
 
@@ -99,7 +99,7 @@ namespace LibraryServices
                 case true:
                     // If there are holds, checkout the item to the library card with the earliest hold
                     this.CheckoutToEarliestHold(assetId, currentHolds);
-                    goto default;
+                    break;
                 default:
                     // Always update the item status to available
                     this.UpdateAssetStatus(assetId, "Available");
