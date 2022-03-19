@@ -33,6 +33,7 @@ namespace asp.net_core3_library_application
             // Library service (dependency) injection from ILibraryAsset requests
             services.AddScoped<ILibraryAsset, LibraryAssetService>();
             services.AddScoped<ICheckout, CheckoutService>();
+            services.AddScoped<IPatron, PatronService>();
             // Gets the configuration string from the appsettings.json using msoft efc
             services.AddDbContext<LibraryContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("LibraryConnection")));
         }

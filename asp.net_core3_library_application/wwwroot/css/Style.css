@@ -9,18 +9,22 @@ span.logo > a {
 }
 
 div#catalog {
-    background: url('/images/catalog.jpg') bottom right 15% no-repeat #555;
+    background: url('/images/catalog.jpg') bottom right no-repeat #555;
     color: white;
 }
 
 div#patrons {
-    background: url('/images/patrons.jpg') bottom right 15% no-repeat #555;
+    background: url('/images/patrons.jpg') bottom right no-repeat #555;
     color: white;
 }
 
 div#branches {
-    background: url('/images/branches.jpg') bottom right 15% no-repeat #555;
+    background: url('/images/branches.jpg') bottom right no-repeat #555;
     color: white;
+}
+
+h2.homeLabel {
+    height: 210px;
 }
 
 /* Other */
@@ -48,6 +52,5 @@ tr.detailInfo > td {
 }
 
 div.page-content {
-    width: 81%;
     margin: 0 auto;
 }
