@@ -1,5 +1,6 @@
 ﻿using asp.net_core3_library_application.Models.PatronModels;
 using LibraryData;
+using LibraryData.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,28 @@ namespace asp.net_core3_library_application.Controllers
             var model = new PatronIndexModel()
             {
                 Patrons = patronModels
+            };
+
+            return View(model);
+        }
+
+        public IActionResult Detail(int id)
+        {
+            var patron = _patron.Get(id);
+
+            var model = new PatronDetailModel
+            {
+                LastName = patron.LastName,
+                FirstName = patron.FirstName,
+                Address = patron.Address,
+                HomeLibraryBranch = patron.HomeLibraryBranch.Name,
+                MemberSince = patron.LibraryCard.Created,
+                OverdueFees = patron.LibraryCard.Fees,
+                LibraryCardId = patron.LibraryCard.Id,
+                Telephone = patron.TelephoneNumber,
+                AssetsCheckedOut = _patron.GetCheckouts(id).ToList() ?? new List<Checkout>(),
+                CheckoutHistory = _patron.GetCheckoutHistory(id),
+                Holds = _patron.GetHolds(id)
             };
 
             return View(model);

@@ -27,6 +27,36 @@ h2.homeLabel {
     height: 210px;
 }
 
+div.indexCard {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.Out {
+    border: 1px dashed black;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.cContainer {
+    margin-right: 1%;
+}
+
+.Out > span {
+    padding: 10px;
+}
+
+/* Catalog */
+
+.changeWidth {
+    width: 80%;
+    margin: 0 auto;
+}
+
 /* Other */
 
 .imageCell {
@@ -53,4 +83,16 @@ tr.detailInfo > td {
 
 div.page-content {
     margin: 0 auto;
+}
+
+#patronHasFees {
+    color: darkred;
+    font-weight: bold;  
+}
+
+#patronId {
+    color: darkslategrey;
+    padding: 3px;
+    font-weight: bold;
+    font-size: .8rem;
 }
