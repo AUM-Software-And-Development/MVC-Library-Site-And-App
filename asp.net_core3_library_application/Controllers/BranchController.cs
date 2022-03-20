@@ -29,7 +29,28 @@ namespace asp.net_core3_library_application.Controllers
                 Branches = branches
             };
 
-            return View();
+            return View(model);
+        }
+
+        public IActionResult Detail(int id)
+        {
+            var branch = _branch.Get(id);
+
+            var model = new BranchDetailModel
+            {
+                Id = branch.Id,
+                Name = branch.Name,
+                Address = branch.Address,
+                Telephone = branch.Telephone,
+                OpenDate = branch.OpenDate.ToString("yyyy-MM-dd"),
+                NumberOfAssets = _branch.GetAssets(id).Count(),
+                NumberOfPatrons = _branch.GetPatrons(id).Count(),
+                TotalAssetValue = _branch.GetAssets(id).Sum(asset => asset.Cost),
+                ImageUrl = branch.ImageUrl,
+                HoursOpen = _branch.GetBranchHours(id)
+            };
+
+            return View(model);
         }
     }
 }

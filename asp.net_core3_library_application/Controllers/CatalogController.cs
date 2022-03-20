@@ -142,19 +142,19 @@ namespace asp.net_core3_library_application.Controllers
         }
 
         [HttpPost] // Limit to post
-        public IActionResult PlaceCheckout(int id, int libraryCardId)
+        public IActionResult PlaceCheckout(int AssetId, int libraryCardId)
         {
-            _checkouts.CheckOutItem(id, libraryCardId);
+            _checkouts.CheckOutItem(AssetId, libraryCardId);
 
-            return RedirectToAction("Detail", new { id = id });
+            return RedirectToAction("Detail", new { id = AssetId });
         }
 
         [HttpPost]
-        public IActionResult PlaceHold(int id, int libraryCardId)
+        public IActionResult PlaceHold(int AssetId, int libraryCardId)
         {
-            _checkouts.PlaceHold(id, libraryCardId);
+            _checkouts.PlaceHold(AssetId, libraryCardId);
 
-            return RedirectToAction("Detail", new { id = id });
+            return RedirectToAction("Detail", new { id = AssetId });
         }
     }
 }

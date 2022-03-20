@@ -24,7 +24,8 @@ namespace LibraryServices
 
         public static string HumanizeDay(int number)
         {
-            return Enum.GetName(typeof(DayOfWeek), number);
+            // Data starts the week on Sunday, System starts on Monday.
+            return Enum.GetName(typeof(DayOfWeek), number - 1);
         }
 
         public static string HumanizeTime(int time)

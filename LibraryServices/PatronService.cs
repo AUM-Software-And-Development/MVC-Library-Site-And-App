@@ -52,7 +52,7 @@ namespace LibraryServices
                 
             return _context.Checkouts
                 .Include(cO => cO.LibraryCard)
-                .Include(cO => cO.LibraryCard)
+                .Include(cO => cO.LibraryAsset)
                 .Where(cO => cO.LibraryCard.Id == cardId);
         }
 

@@ -2,16 +2,10 @@ using LibraryData;
 using LibraryServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace asp.net_core3_library_application
 {
@@ -34,6 +28,7 @@ namespace asp.net_core3_library_application
             services.AddScoped<ILibraryAsset, LibraryAssetService>();
             services.AddScoped<ICheckout, CheckoutService>();
             services.AddScoped<IPatron, PatronService>();
+            services.AddScoped<ILibraryBranch, LibraryBranchService>();
             // Gets the configuration string from the appsettings.json using msoft efc
             services.AddDbContext<LibraryContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("LibraryConnection")));
         }

@@ -9,17 +9,17 @@ span.logo > a {
 }
 
 div#catalog {
-    background: url('/images/catalog.jpg') bottom right no-repeat #555;
+    background: url('/images/catalog.png') bottom right no-repeat #555;
     color: white;
 }
 
 div#patrons {
-    background: url('/images/patrons.jpg') bottom right no-repeat #555;
+    background: url('/images/patrons.png') bottom right no-repeat #555;
     color: white;
 }
 
 div#branches {
-    background: url('/images/branches.jpg') bottom right no-repeat #555;
+    background: url('/images/branches.png') bottom right no-repeat #555;
     color: white;
 }
 
@@ -55,6 +55,16 @@ div.Out {
 .changeWidth {
     width: 80%;
     margin: 0 auto;
+}
+
+/* Branch */
+
+.branchImage {
+    width: 100%;
+}
+
+div.lowered {
+    margin-top: 24px;
 }
 
 /* Other */
